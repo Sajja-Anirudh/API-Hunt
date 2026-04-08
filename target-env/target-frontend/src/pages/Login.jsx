@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import api from './api.js'
-import { useAuth } from './AuthContext.jsx'
+import api from '../apis/api.js'
+import { useAuth } from '../contexts/AuthContext.jsx'
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -52,7 +52,7 @@ export default function Login() {
             <p className="eyebrow">Dealer access</p>
             <h1>Secure login</h1>
           </div>
-          <span className="chip">Dark mode</span>
+          <span className="chip">Secure Enterprise</span>
         </div>
 
         <p className="login-copy">

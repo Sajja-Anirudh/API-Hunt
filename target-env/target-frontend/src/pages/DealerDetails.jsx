@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import api from './api.js'
-import { useAuth } from './AuthContext.jsx'
+import api from '../apis/api.js'
+import { useAuth } from '../contexts/AuthContext.jsx'
 
 export default function DealerDetails() {
   const [dealer, setDealer] = useState(null)

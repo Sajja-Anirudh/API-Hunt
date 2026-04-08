@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './AuthContext.jsx'
-import Login from './Login.jsx'
-import DealerDetails from './DealerDetails.jsx'
-import IndentHistory from './IndentHistory.jsx'
+import { AuthProvider, useAuth } from './contexts/AuthContext.jsx'
+import Login from './pages/Login.jsx'
+import DealerDetails from './pages/DealerDetails.jsx'
+import IndentHistory from './pages/IndentHistory.jsx'
 import './App.css'
 
 function RequireAuth({ children }) {
