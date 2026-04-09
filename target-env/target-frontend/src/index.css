@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
 :root {
   color-scheme: light;
-  font-family: Inter, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  background: #f4f7f9;
+  background: #fdfdfc;
   color: #1e293b;
   
   /* Enterprise Light Theme Variables */
@@ -13,8 +15,9 @@
   --text: #0f172a;
   --text-secondary: #475569;
   --muted: #64748b;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
+  --accent: #111111; /* Changed to Luxury Black */
+  --accent-hover: #333333;
+  --luxury-gold: #c5a059;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
   --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
 }
@@ -23,9 +26,7 @@
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
+html, body, #root {
   min-height: 100%;
 }
 
@@ -36,12 +37,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-button,
-input {
+button, input {
   font: inherit;
 }
 
 img {
   max-width: 100%;
   display: block;
+}
+
+/* Luxury Typography */
+.font-luxury {
+  font-family: 'Playfair Display', serif;
 }

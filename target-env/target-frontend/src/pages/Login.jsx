@@ -66,6 +66,7 @@ export default function Login() {
             <span>Username</span>
             <input
               type="text"
+              id='userUsername'
               value={username}
               id="userUsername"
               onChange={(event) => setUsername(event.target.value)}
@@ -79,6 +80,7 @@ export default function Login() {
             <span>Password</span>
             <input
               type="password"
+              id='userPassword'
               value={password}
               id="userPassword"
               onChange={(event) => setPassword(event.target.value)}
