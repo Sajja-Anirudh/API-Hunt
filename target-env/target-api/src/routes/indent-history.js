@@ -5,14 +5,14 @@ const verifyToken = require('../middleware/authMiddleware');
 
 // The VULNERABLE Route - BOLA is present (For your scanner to attack)
 router.get('/indent-history-vulnerable/:dealer_id', verifyToken, (req, res) => {
-    const requestedDealerId = parseInt(req.params.dealer_id);
+    const requestedDealerId = req.params.dealer_id;
     const history = db.car_indents.filter(indent => indent.dealer_id === requestedDealerId);
-    res.json({ data: history });
+    res.status(200).json({ data: history });
 });
 
 // The SECURE Route - Patched (Optional, for reference)
 router.get('/indent-history-secure/:dealer_id', verifyToken, (req, res) => {
-    const requestedDealerId = parseInt(req.params.dealer_id);
+    const requestedDealerId = req.params.dealer_id;
     const authenticatedDealerId = req.user.dealer_id;
 
     if (requestedDealerId !== authenticatedDealerId) {
@@ -20,7 +20,7 @@ router.get('/indent-history-secure/:dealer_id', verifyToken, (req, res) => {
     }
 
     const history = db.car_indents.filter(indent => indent.dealer_id === authenticatedDealerId);
-    res.json({ data: history });
+    res.status(200).json({ data: history });
 });
 
 // ADD NEW RECORD (Securely uses the logged-in user's dealer_id)
@@ -44,7 +44,7 @@ router.post('/add', verifyToken, (req, res) => {
 
 // DELETE RECORD
 router.delete('/delete/:indent_id', verifyToken, (req, res) => {
-    const indentId = parseInt(req.params.indent_id);
+    const indentId = req.params.indent_id;
     const authenticatedDealerId = req.user.dealer_id;
 
     // Find the record, ensuring it belongs to the logged-in dealer

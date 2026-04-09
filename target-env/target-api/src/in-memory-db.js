@@ -1,23 +1,33 @@
-// A simple in-memory database simulating the Dealership Management Software
+// in-memory-db.js
 const db = {
-    // We have two dealers to demonstrate BOLA. Dealer 101 and Dealer 102.
+    // We have two dealers to demonstrate BOLA using UUIDs
     users: [
-        { id: 1, username: "dealer_alpha", password: "password123", dealer_id: 101 },
-        { id: 2, username: "dealer_beta", password: "password123", dealer_id: 102 }
+        { 
+            id: "u-a1b2c3d4-1000-4000-8000-abcdef123456", 
+            username: "dealer_alpha", 
+            password: "password123", 
+            dealer_id: "d-11112222-3333-4444-5555-666677778888" 
+        },
+        { 
+            id: "u-e5f6g7h8-2000-4000-8000-abcdef654321", 
+            username: "dealer_beta", 
+            password: "password123", 
+            dealer_id: "d-99990000-1111-2222-3333-444455556666" 
+        }
     ],
     
-    // Car Indent History
+    // Car Indent History (Notice they map to the new Dealer UUIDs)
     car_indents: [
-        { indent_id: 1001, dealer_id: 101, model: "Range Rover Sport", status: "Delivered" },
-        { indent_id: 1002, dealer_id: 101, model: "Defender 110", status: "Pending" },
-        { indent_id: 1003, dealer_id: 102, model: "Discovery", status: "In Transit" },
-        { indent_id: 1004, dealer_id: 102, model: "Range Rover Evoque", status: "Delivered" }
+        { indent_id: "ind-1001", dealer_id: "d-11112222-3333-4444-5555-666677778888", model: "Range Rover Sport", status: "Delivered" },
+        { indent_id: "ind-1002", dealer_id: "d-11112222-3333-4444-5555-666677778888", model: "Defender 110", status: "Pending" },
+        { indent_id: "ind-1003", dealer_id: "d-99990000-1111-2222-3333-444455556666", model: "Discovery", status: "In Transit" },
+        { indent_id: "ind-1004", dealer_id: "d-99990000-1111-2222-3333-444455556666", model: "Range Rover Evoque", status: "Delivered" }
     ],
 
     // Dealer Details
     dealers: [
-        { dealer_id: 101, name: "Alpha Motors", location: "London North", rating: 4.8 },
-        { dealer_id: 102, name: "Beta Autos", location: "Manchester Central", rating: 4.2 }
+        { dealer_id: "d-11112222-3333-4444-5555-666677778888", name: "Alpha Motors", location: "London North", rating: 4.8 },
+        { dealer_id: "d-99990000-1111-2222-3333-444455556666", name: "Beta Autos", location: "Manchester Central", rating: 4.2 }
     ]
 };
 
