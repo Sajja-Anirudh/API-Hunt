@@ -1,11 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+
+// Setup Supabase
+const supabaseUrl = 'https://qniwjfsudzmoqyprqofr.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuaXdqZnN1ZHptb3F5cHJxb2ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MzE5ODgsImV4cCI6MjA5MTMwNzk4OH0.VuMEoxTuDuxNapLMcHGjV2vOJScyfo_g5DqC-CRw-gg';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function ScannerDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const scanId = location.state?.scanId;
+
   const [isScanning, setIsScanning] = useState(true);
   const [logs, setLogs] = useState([]);
-  const [progress, setProgress] = useState(0); // 0=Init, 1=JWT, 2=Unauth, 3=BOLA, 4=Done
   const terminalEndRef = useRef(null);
 
   useEffect(() => {
@@ -13,34 +21,31 @@ export default function ScannerDashboard() {
   }, [logs]);
 
   useEffect(() => {
-    const sequence = [
-      { delay: 500, prog: 0, log: "[*] Establishing secure connection to target..." },
-      { delay: 1500, prog: 1, log: "[*] Phase 1: Initiating JWT Auth Integrity Check..." },
-      { delay: 2500, prog: 1, type: "red", log: "[-] VULNERABILITY DETECTED: Token signature weakly signed (HS256)." },
-      { delay: 4000, prog: 2, log: "[*] Phase 2: Probing Unauthenticated Endpoints..." },
-      { delay: 5500, prog: 2, type: "green", log: "[+] SECURE: 401 Unauthorized returned correctly. Attack failed." },
-      { delay: 7000, prog: 3, log: "[*] Phase 3: Launching Horizontal BOLA Payload Fuzzing..." },
-      { delay: 8500, prog: 3, log: "[-] Injecting Payload ID 101 -> 403 Forbidden" },
-      { delay: 9500, prog: 3, type: "red", log: "[!!!] CRITICAL: Injecting Payload ID 102 -> 200 OK (Data Leaked)" },
-      { delay: 11000, prog: 4, log: "[*] Attack sequence complete. Generating algorithmic report..." }
-    ];
+    if (!scanId) return;
 
-    let timerIds = [];
-    sequence.forEach(({ delay, prog, log, type }) => {
-      const id = setTimeout(() => {
-        setLogs(prev => [...prev, { text: log, type }]);
-        setProgress(prog);
-        if (prog === 4) setIsScanning(false);
-      }, delay);
-      timerIds.push(id);
-    });
+    const channel = supabase
+      .channel('realtime_terminal')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'scan_logs', filter: `scan_id=eq.${scanId}` },
+        (payload) => {
+          const logData = payload.new.response_body_snippet;
+          setLogs((prev) => [...prev, { text: logData.message, type: logData.type }]);
+          
+          if (logData.message.includes('=== SCAN COMPLETE ===')) {
+              setIsScanning(false);
+          }
+        }
+      )
+      .subscribe();
 
-    return () => timerIds.forEach(clearTimeout);
-  }, []);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [scanId]);
 
   return (
     <div className="dashboard-grid">
-      {/* Left Column: Loader & Timeline */}
       <div>
         <div className="loader-container">
           {isScanning ? (
@@ -57,37 +62,11 @@ export default function ScannerDashboard() {
             </>
           )}
         </div>
-
-        <div className="timeline">
-          <div className="timeline-item">
-            <div className={`timeline-dot ${progress > 1 ? 'dot-red' : progress === 1 ? 'dot-pending' : ''}`}></div>
-            <h3 className="font-luxury">1. JWT Auth Integrity</h3>
-            <p style={{ color: progress > 1 ? 'var(--danger)' : '#64748b', fontSize: '0.9rem' }}>
-              {progress > 1 ? 'Status: Vulnerable' : 'Status: Scanning...'}
-            </p>
-          </div>
-          
-          <div className="timeline-item">
-            <div className={`timeline-dot ${progress > 2 ? 'dot-green' : progress === 2 ? 'dot-pending' : ''}`}></div>
-            <h3 className="font-luxury">2. Unauthenticated Exposure</h3>
-            <p style={{ color: progress > 2 ? 'var(--success)' : '#64748b', fontSize: '0.9rem' }}>
-              {progress > 2 ? 'Status: Secure' : progress < 2 ? 'Status: Queued' : 'Status: Scanning...'}
-            </p>
-          </div>
-
-          <div className="timeline-item">
-            <div className={`timeline-dot ${progress >= 4 ? 'dot-red' : progress === 3 ? 'dot-pending' : ''}`}></div>
-            <h3 className="font-luxury">3. Full Force BOLA Attack</h3>
-            <p style={{ color: progress >= 4 ? 'var(--danger)' : '#64748b', fontSize: '0.9rem' }}>
-              {progress >= 4 ? 'Status: Critical Vulnerability Found' : progress < 3 ? 'Status: Queued' : 'Status: Injecting Payloads...'}
-            </p>
-          </div>
-        </div>
       </div>
 
-      {/* Right Column: Terminal & Report Button */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div className="terminal-box font-mono">
+          {logs.length === 0 && <p className="log-line log-blue">[*] Waiting for Python Engine payload execution...</p>}
           {logs.map((l, i) => (
             <p key={i} className={`log-line ${l.type === 'red' ? 'log-red' : l.type === 'green' ? 'log-green' : 'log-blue'}`}>
               {l.text}
@@ -97,11 +76,7 @@ export default function ScannerDashboard() {
         </div>
 
         {!isScanning && (
-          <button 
-            className="btn-primary" 
-            style={{ padding: '20px', fontSize: '1.2rem', background: 'var(--danger)' }}
-            onClick={() => navigate('/report')}
-          >
+          <button className="btn-primary" style={{ padding: '20px', fontSize: '1.2rem', background: 'var(--danger)' }} onClick={() => navigate('/report')}>
             Generate Executive Report
           </button>
         )}
