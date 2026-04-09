@@ -1,12 +1,15 @@
 # modules/crawler.py
 from urllib.parse import urljoin, urlparse
-
+import os
+from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
 import jwt
 
+load_dotenv()
+
 DEFAULT_CREDENTIALS = {
-    "username": "dealer_alpha",
-    "password": "password123",
+    "username": os.getenv("ATTACKER_USERNAME"),
+    "password": os.getenv("ATTACKER_PASSWORD"),
 }
 
 LOGIN_FIELD_HINTS = ["user", "email", "login", "username", "dealer", "userusername"]

@@ -1,9 +1,12 @@
-# scanner.py
+import os
+from dotenv import load_dotenv
 from modules.crawler import discover_endpoints
 from modules.bola_engine import run_bola_attack
 
+load_dotenv()
+
 # Target Application
-FRONTEND_URL = "http://localhost:5173"
+FRONTEND_URL = os.getenv("TARGET_FRONTEND_URL", "http://localhost:5173")
 
 # Hardcoded victims we want to steal data from
 # (In a real scenario, hackers scrape these from forums, metadata, or previous leaks)
