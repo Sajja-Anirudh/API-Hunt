@@ -8,8 +8,8 @@ FRONTEND_URL = "http://localhost:5173"
 # Hardcoded victims we want to steal data from
 # (In a real scenario, hackers scrape these from forums, metadata, or previous leaks)
 VICTIM_TARGETS = [
-    "u-e5f6g7h8-2000-4000-8000-abcdef654321",  # Victim User UUID
-    "d-99990000-1111-2222-3333-444455556666"   # Victim Dealer UUID
+    "u-7a2e6b19-5d88-4c9f-a3b1-9e4f2c6d8a10",  # Victim User UUID
+    "d-a8c3e912-1f44-47d2-b8c1-7d3e9f2056ab"   # Victim Dealer UUID
 ]
 
 def main():
