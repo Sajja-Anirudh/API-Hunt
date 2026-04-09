@@ -424,3 +424,174 @@ h2 {
     align-items: flex-start;
   }
 }
+
+
+/* --- APPEND THIS TO THE BOTTOM OF APP.CSS --- */
+
+/* Override Login/Signup shell to be flat luxury */
+.page-shell {
+  min-height: calc(100vh - 80px);
+  background: #fdfdfc; /* Flat luxury background */
+  display: grid;
+  place-items: center;
+  padding: 60px 32px;
+}
+
+/* Luxury Marketing Components */
+.luxury-navbar {
+  height: 80px;
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-item {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+  color: var(--luxury-gold);
+}
+
+.nav-button {
+  border: 1px solid var(--luxury-gold);
+  background: transparent;
+  color: var(--luxury-gold);
+  padding: 10px 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background: var(--luxury-gold);
+  color: #000000;
+}
+
+.luxury-footer {
+  background: #0a0a0a;
+  color: #ffffff;
+  padding: 80px 60px;
+  text-align: center;
+}
+
+.luxury-footer h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--luxury-gold);
+  margin-bottom: 24px;
+}
+
+.luxury-footer p {
+  max-width: 700px;
+  margin: 0 auto;
+  color: #94a3b8;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.hero-section {
+  height: 100vh;
+  background-image: url('https://imgs.search.brave.com/FjnHE330WuT0Zqhdaf8zG0TFX0Dr3huK814R-e-kdps/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE0/OTMyMzg3OTIwMDAt/ODExM2RhNzA1NzYz/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZhdXRv/PWZvcm1hdCZmaXQ9/Y3JvcCZpeGxpYj1y/Yi00LjEuMCZpeGlk/PU0zd3hNakEzZkRC/OE1IeHpaV0Z5WTJo/OE1UUjhmR05oY25O/OFpXNThNSHg4TUh4/OGZEQT0');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #ffffff;
+}
+
+.hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #cbd5e1;
+}
+
+.role-container {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.role-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 60px 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-decoration: none;
+  color: #000000;
+}
+
+.role-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  border-color: var(--luxury-gold);
+}
+
+.role-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.role-card p {
+  color: #64748b;
+  line-height: 1.6;
+}
