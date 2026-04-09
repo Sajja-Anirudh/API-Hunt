@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Packages() {
   const navigate = useNavigate();
-  const [targetUrl, setTargetUrl] = useState('http://localhost:5174'); 
+  const [targetUrl, setTargetUrl] = useState(''); 
   const [selectedTiers, setSelectedTiers] = useState(['enterprise']); 
 
   const pricingTiers = [
@@ -78,6 +78,7 @@ export default function Packages() {
             value={targetUrl}
             onChange={(e) => setTargetUrl(e.target.value)}
             style={{ fontSize: '1.1rem', padding: '16px', width: '100%', marginTop: '12px', borderRadius: '6px', border: '1px solid #ccc' }}
+            placeholder='Enter website URL...'
           />
         </div>
       </div>
