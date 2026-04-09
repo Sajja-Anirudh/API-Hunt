@@ -67,6 +67,7 @@ export default function Login() {
             <input
               type="text"
               value={username}
+              id="userUsername"
               onChange={(event) => setUsername(event.target.value)}
               placeholder="dealer@example.com"
               autoComplete="username"
@@ -79,6 +80,7 @@ export default function Login() {
             <input
               type="password"
               value={password}
+              id="userPassword"
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
               autoComplete="current-password"
