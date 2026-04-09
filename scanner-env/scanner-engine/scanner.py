@@ -10,6 +10,9 @@ def main():
     print("\n[PHASE 1] Crawling Frontend & Looting Credentials...")
     
     endpoints, looted_data = discover_endpoints(FRONTEND_URL)
+
+    print(*endpoints)
+    print(looted_data)
     
     attacker_token = looted_data.get("token")
     attacker_uuid = looted_data.get("uuid")
