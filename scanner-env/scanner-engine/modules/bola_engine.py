@@ -4,7 +4,9 @@ import random
 
 def _generate_fake_ip():
     """Spoofs the IP address to bypass basic WAF rate limiting."""
-    return f"{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}"
+    generated_ip = f"{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}"
+    print('[IP]: ', generated_ip)
+    return generated_ip
 
 def run_bola_attack(discovered_endpoints, looted_data, victim_targets):
     """
