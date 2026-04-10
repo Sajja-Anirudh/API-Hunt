@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller('api/scan')
@@ -9,7 +9,6 @@ export class AppController {
   async startScan(
     @Body() body: { targetUrl: string; tiers?: string[]; totalBilled?: number; authToken?: string; clientId?: string }
   ) {
-    // --- TRIPWIRE ---
     console.log('\n[!!!] NESTJS RECEIVED THE ATTACK COMMAND:', body);
     
     return this.appService.startScanSequence(
@@ -17,5 +16,11 @@ export class AppController {
       body.authToken || '',
       body.clientId || 'enterprise-client'
     );
+  }
+
+  // --- NEW: SERVE REPORT DATA TO REACT ---
+  @Get('report/:scanId')
+  async getReport(@Param('scanId') scanId: string) {
+    return this.appService.getReportData(scanId);
   }
 }

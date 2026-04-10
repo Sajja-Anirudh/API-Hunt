@@ -40,7 +40,7 @@ export default function IndentHistory() {
 
         // We fetch using the vulnerable route so the scanner can attack it later
         const historyResponse = await api.get(
-          `/indent-history/indent-history-vulnerable/${dealerData?.dealer_id}`
+          `/indent-history/indent-history-secure/${dealerData?.dealer_id}`
         )
         if (!active) return
         setHistory(historyResponse.data?.data ?? [])

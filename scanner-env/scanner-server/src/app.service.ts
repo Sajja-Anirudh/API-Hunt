@@ -39,23 +39,18 @@ export class AppService {
       console.log(`[*] Step 2: Database records created! Scan ID: ${scanId}`);
 
       const pythonScriptPath = path.resolve(__dirname, '../../scanner-engine/scanner.py');
-      
-      // Point EXACTLY to the virtual environment's Python to prevent module errors
       const pythonExecutable = path.resolve(__dirname, '../../scanner-engine/venv/Scripts/python.exe');
       
       console.log(`[*] Step 3: Spawning Python using VENV: ${pythonExecutable}`);
       
-      // Use '-u' to prevent Python from buffering standard output
       const pythonProcess = spawn(pythonExecutable, ['-u', pythonScriptPath, '--target_url', targetUrl], { 
         env: { ...process.env } 
       });
 
-      // Catch Python syntax/module crashes instantly
       pythonProcess.stderr.on('data', (data) => {
         console.error(`\n[PYTHON FATAL CRASH]: ${data.toString()}`);
       });
 
-      // Catch NodeJS spawn failures instantly
       pythonProcess.on('error', (err) => {
         console.error('\n[!!!] NODEJS FAILED TO START PYTHON:', err);
       });
@@ -65,7 +60,6 @@ export class AppService {
         if (!output) return;
 
         console.log(`[Python]: ${output}`);
-
         const lines = output.split('\n');
         
         for (const line of lines) {
@@ -82,6 +76,9 @@ export class AppService {
             endpoint_path: 'STDOUT',
             response_body_snippet: { message: cleanLine, type: colorType }
           }]);
+
+          // THE CHRONO-FIX: Enforce a 50ms delay to guarantee WebSocket order
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
       });
 
@@ -98,6 +95,50 @@ export class AppService {
     } catch (error) {
       console.error('\n[!!!] CAUGHT ERROR IN NESTJS:', error);
       throw new InternalServerErrorException('Failed to initialize attack sequence');
+    }
+  }
+
+  async getReportData(scanId: string) {
+    try {
+      const { data: logs, error } = await this.supabase
+        .from('scan_logs')
+        .select('*')
+        .eq('scan_id', scanId)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      const vulnerabilities : any = [];
+      let totalEndpoints = 0;
+
+      logs.forEach(log => {
+        const message = log.response_body_snippet.message;
+        
+        if (message.includes('Total Endpoints Discovered:')) {
+          const match = message.match(/\d+/);
+          if (match) totalEndpoints = parseInt(match[0]);
+        }
+        
+        if (message.includes('[!!!] Unauthorized Data Extracted:')) {
+          const dataSnippet = message.split('Extracted: ')[1];
+          vulnerabilities.push({
+            type: 'BOLA (Broken Object Level Authorization)',
+            severity: 'CRITICAL',
+            leaked_data: dataSnippet
+          });
+        }
+      });
+
+      return {
+        scanId,
+        totalEndpoints,
+        vulnerabilitiesCount: vulnerabilities.length,
+        vulnerabilities
+      };
+
+    } catch (error) {
+      console.error('\n[!!!] FAILED TO GENERATE REPORT:', error);
+      throw new InternalServerErrorException('Could not generate report data');
     }
   }
 }

@@ -4,6 +4,7 @@ const db = require('../in-memory-db');
 const verifyToken = require('../middleware/authMiddleware');
 
 // The VULNERABLE Route - BOLA is present (For your scanner to attack)
+// change made here <----------------------------
 router.get('/indent-history-vulnerable/:dealer_id', verifyToken, (req, res) => {
     const requestedDealerId = req.params.dealer_id;
     const history = db.car_indents.filter(indent => indent.dealer_id === requestedDealerId);
